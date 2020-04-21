@@ -2,11 +2,10 @@
 
 #define CATCH_CONFIG_MAIN
 
-#include <catch2/catch.hpp>
 #include <cinder/Rand.h>
+#include <mylibrary/terrain.h>
 
-#include <mylibrary/example.h>
-
+#include <catch2/catch.hpp>
 
 TEST_CASE("Random sanity test", "[random]") {
   const float random = cinder::randFloat();
