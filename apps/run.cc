@@ -12,7 +12,7 @@ using cinder::app::RendererGl;
 namespace myapp {
 
 const int kSamples = 8;
-const int kWidth = 1000;
+const int kWidth = 1500;
 const int kHeight = 1000;
 const int kFramerate = 60;
 
@@ -20,7 +20,7 @@ void SetUp(App::Settings* settings) {
   settings->setWindowSize(kWidth, kHeight);
   settings->setTitle("Synthwave vibe");
   settings->setFrameRate(kFramerate);
-  settings->setFullScreen();
+  // settings->setFullScreen();
 }
 
 }  // namespace myapp

@@ -10,14 +10,15 @@ class Terrain {
  public:
   Terrain();
   Terrain(int height, int width, int scale);
-  void DrawTerrain();
-  void UpdateZValues(float y_pos);
+  void DrawTerrain(float y_offset);
+  void UpdateZValues(float y_pos, float loud);
 
  private:
   std::vector<std::vector<float>> random;
   int height;
   int width;
   int scale;
+  float y_noise;
 };
 
 }  // namespace terrain
