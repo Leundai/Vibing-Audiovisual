@@ -17,5 +17,8 @@
     - Using the Simplex Noise and feeding it the x and y values of each block I was able to get some noise and map it
     - It looks very mountainous! At the same time it it finally one step closer to that of music visualizer
     - **TODO**
-    - [ ] Create the ability to put in a song and influence the noise values!
-    - [ ] Either real time process the music and update the terrain while playing or process it before playing
+    - [x] Create the ability to put in a song and influence the noise values!
+    - [x] Either real time process the music and update the terrain while playing or process it before playing
+- **4/21/20** Implemented Changing Z Values based on Real Time Audio Analysis using DFT
+    - Based on a threshold for the volume of the sound the terrain changes. However this only works for song that are very loud
+    - Next on the list is to try to find a beat and only apply z values based on average loudness.
