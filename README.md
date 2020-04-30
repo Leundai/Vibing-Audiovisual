@@ -8,7 +8,7 @@ layout.
 
 **Author**: Leonardo Galindo - [`lgalin6@illinois.edu`](mailto:lgalin6@illinois.edu)
 
-[](https://i.imgur.com/4rgZqpx.gifv)
+[Visual of Project](https://i.imgur.com/4rgZqpx.gif)
 
 ## Dependencies
 
