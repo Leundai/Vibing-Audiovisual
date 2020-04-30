@@ -9,24 +9,23 @@ using cinder::app::App;
 using cinder::app::RendererGl;
 
 
-namespace myapp {
+namespace app {
 
 const int kSamples = 8;
-const int kWidth = 1500;
-const int kHeight = 1000;
+const int kWidth = 1920;
+const int kHeight = 1080;
 const int kFramerate = 60;
 
 void SetUp(App::Settings* settings) {
   settings->setWindowSize(kWidth, kHeight);
-  settings->setTitle("Synthwave vibe");
   settings->setFrameRate(kFramerate);
-  // settings->setFullScreen();
+  settings->setTitle("Synthwave vibe");
+  //settings->setFullScreen();
 }
 
-}  // namespace myapp
+}  // namespace app
 
 
 // This is a macro that runs the application.
-CINDER_APP(myapp::MyApp,
-           RendererGl(RendererGl::Options().msaa(myapp::kSamples)),
-           myapp::SetUp)
+CINDER_APP(app::MyApp,
+           RendererGl(RendererGl::Options().msaa(app::kSamples)), app::SetUp)

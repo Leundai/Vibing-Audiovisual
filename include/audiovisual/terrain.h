@@ -4,24 +4,26 @@
 
 #include <vector>
 
-namespace terrain {
+namespace audiovisual {
+
+float Map( float value, float low1, float high1, float low2, float high2);
 
 class Terrain {
  public:
   Terrain();
-  Terrain(int height, int width, int scale);
-  void DrawTerrain(float y_offset);
-  void UpdateZValues(float y_pos, float loud);
+  Terrain(int height, int width, int scale, bool can_shake);
+  void DrawTerrain();
+  void UpdateZValues(float y_pos, float volume);
 
  private:
-  std::vector<std::vector<float>> random;
+  std::vector<std::vector<float>> z_values;
   int height;
   int width;
   int scale;
-  float y_noise;
+  bool can_shake;
 };
 
-}  // namespace terrain
+}  // namespace audiovisual
 
 
 #endif // FINALPROJECT_MYLIBRARY_EXAMPLE_H_

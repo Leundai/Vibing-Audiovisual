@@ -3,11 +3,10 @@
 #define CATCH_CONFIG_MAIN
 
 #include <cinder/Rand.h>
-#include <mylibrary/terrain.h>
 
 #include <catch2/catch.hpp>
 
-TEST_CASE("Random sanity test", "[random]") {
+TEST_CASE("Random sanity test", "[z_values]") {
   const float random = cinder::randFloat();
   REQUIRE(0. <= random);
   REQUIRE(random <= 1.);
