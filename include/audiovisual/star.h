@@ -6,13 +6,12 @@
 namespace audiovisual {
 class Star {
  public:
-  Star (cinder::ColorAf color, glm::vec3 position, cinder::gl::BatchRef &mSphere);
+  Star(const glm::vec3& position, cinder::gl::BatchRef& batch_sphere_);
   void DrawStar(float magnitude);
+
  private:
-  cinder::Color color;
   glm::vec3 position;
-  cinder::gl::BatchRef mSphere;
-  cinder::gl::GlslProgRef mGlsl;
+  cinder::gl::BatchRef batch_sphere_;
 };
 }
 

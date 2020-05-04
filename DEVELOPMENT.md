@@ -33,3 +33,18 @@
     - By making a star class this make it possible to easily make the multiple amount of stars object
     - If needed to place the stars randomly it can be done by providing a specific Vec3 space for x y and z
     - Colors are constant however so I still need to figure out how to it possible to be edited for people instead of going into the code
+- **4/30/20** The spheres(Stars) are now influenced by colors however it is not  by frequency
+    - First need to map the colors to the spheres and make it possible for them to move and change color on certain strengths of freq
+    - There is no GUI so this will be the next biggest thing to add
+- **5/1/20** Added GUI that supports pausing, playing, skipping back and forth
+    - Support for multiple music has not been added yet or a type of playlist
+    - The skip buttons only play the same song again for now
+    - Also I might be helpful to add some kind of playlist list so that I know what songs are next
+    - Also adding some costumization would be really helpful too in terms of colors and choices
+- **5/2/20** Added support for multiple songs simply by dragging into the window which is easiest than searching for a folder
+    - In order to preserve fluidity of the app it will mainly support drag and drop to add music
+    - Still haven't check for file types just mainly using what I know will work
+- **5/3/20** Tweaked colors so more greens and blues come out and mixtures too. Finalized GUI
+    - I now have checked for files that work and also it is possible to drag and drop a single folder with music
+    - It will handpick all the .wav and .mp3 files and add them to the playlist and display them
+    - Also added a button to clear the playlist! If it gets too crowded

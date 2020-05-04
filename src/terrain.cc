@@ -7,7 +7,6 @@
 #include <cinder/gl/gl.h>
 
 namespace audiovisual {
-const float kVThreshold = .3;
 const int kHighPoint = 50;
 const int kLowPoint = -50;
 
@@ -32,25 +31,31 @@ void Terrain::DrawTerrain() {
 // TODO: Move this method to another file with utilities
 // Sourced: https://stackoverflow.com/questions/3451553/value-remapping
 float Map(float value, float low1, float high1, float low2, float high2) {
-  return low2 + (value - low1) * (high2 - low2) / (high1 - low1);
+  return low2 + (high2 - low2) * ((value - low1) / (high1 - low1));
 }
 
-void Terrain::UpdateZValues(float y_pos, float volume) {
-  float mapped_volume = 0;
-  if (volume > kVThreshold && can_shake) {
-    mapped_volume = Map(volume, 0, 1, 0, .005);
+float past_center_spec = 0;
+void Terrain::UpdateZValues(float y_pos, float bass_vol, float center_spec) {
+  float mapped_y_volume = 0;
+  float mapped_x_volume = 0;
+  if (can_shake) {
+    mapped_y_volume = Map(bass_vol, 0, .1, 0, .01);
+    mapped_x_volume =
+        Map((center_spec + past_center_spec) / 2, 0, 10000, 0, .1);
     // Volume ranges for DFT are 0 to 1, and we want to map it to a smaller
     // value of 0 to .005 for our Simplex Noise to not shake too much
   }
+  past_center_spec = center_spec;
 
   float noise_y = y_pos;
   for (int y = 0; y < height; y++) {
     float noise_x = 0;
     for (int x = 0; x < width; x++) {
-      z_values.at(y).at(x) = (Map(Simplex::noise(glm::vec2(noise_x, noise_y)),
-                                  0, 1, kLowPoint, kHighPoint));
+      z_values.at(y).at(x) =
+          (Map(Simplex::noise(glm::vec3(noise_x, noise_y, mapped_x_volume)), 0,
+               1, kLowPoint, kHighPoint));
       // Range of -50 to 50 for our max Z values, can be changed
-      noise_x += 0.03 + mapped_volume;
+      noise_x += (float)0.03 + mapped_y_volume;
     }
     noise_y += 0.05;
   }
@@ -75,5 +80,6 @@ Terrain::Terrain(int height, int width, int scale, bool can_shake) {
     y_off += 0.075;
   }
 }
-Terrain::Terrain() {}
+
+void Terrain::ToggleCanShake() { can_shake = !can_shake; }
 }  // namespace audiovisual
