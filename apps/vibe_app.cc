@@ -3,7 +3,7 @@
 #include "vibe_app.h"
 
 #include <CinderImGui.h>
-#include <audiovisual/star.h>
+#include <audiovisual/utilities.h>
 #include <cinder/app/App.h>
 #include <cinder/gl/gl.h>
 
@@ -21,6 +21,9 @@ VibeApp::VibeApp()  // The divisions are scalings of the size of the terrain.
   num_bins = 0;
   volume = 1;
   color_pick[3] = 255;  // Alpha setting for color
+  cam_z_pos = 150;
+  draw_interval = 17;
+  noise_y = 0;
 }
 
 void VibeApp::setup() {
@@ -80,7 +83,7 @@ void VibeApp::SetUpStars() {
   float y;
   float z;
   float scale_pos = 3.5;  // Shifts X position of sphere on a scaling scale/16
-  float kBaseZPos = 200.0;
+  const float kBaseZPos = 200.0;
 
   for (int star_index = 1; star_index <= monitor_node_->getNumBins() / 64;
        star_index++) {
@@ -100,6 +103,7 @@ void VibeApp::update() {
   freq_mag = monitor_node_->getMagSpectrum();
   num_bins = monitor_node_->getNumBins();
 
+  // Switches song once the current one is done
   if (!music_output_->isPlaying() && !is_paused) {
     SwitchSong(true);
   }
@@ -196,6 +200,8 @@ void VibeApp::DrawGUI() {
 void VibeApp::SwitchSong(bool forward) {
   music_output_->stop();
   music_output_.reset();
+
+  // Depending on forward or backward changes index
   if (forward) {
     if (song_index == playlist.size() - 1)
       song_index = 0;
@@ -207,6 +213,7 @@ void VibeApp::SwitchSong(bool forward) {
     else
       song_index--;
   }
+
   SetUpSong();
   music_output_->start();
   is_paused = false;
@@ -238,25 +245,8 @@ void VibeApp::MusicalColors() {
 
 void VibeApp::fileDrop(ci::app::FileDropEvent event) {
   std::vector<fs::path> file_paths = event.getFiles();
-  if (file_paths.size() == 1 && fs::is_directory(file_paths[0])) {
-    fs::path folder_path = file_paths[0];
-    file_paths.clear();
-    for (const auto &entry : fs::directory_iterator(folder_path)) {
-      if (entry.path().extension() == ".mp3" ||
-          entry.path().extension() == ".wav") {
-        file_paths.push_back(entry);
-      }
-    }
-  }
-  bool is_sanitized = true;
-  for (const auto &entry : file_paths) {
-    if (entry.extension() == ".mp3" || entry.extension() == ".wav") {
-      continue;
-    } else {
-      is_sanitized = false;
-    }
-  }
-  if (is_sanitized) {
+
+  if (audiovisual::AreValidFiles(file_paths)) {
     playlist.insert(playlist.end(), file_paths.begin(), file_paths.end());
     if (is_cleared) {
       SetUpSong();

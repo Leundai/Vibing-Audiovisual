@@ -4,20 +4,24 @@
 
 #include <Simplex.h>
 #include <audiovisual/terrain.h>
+#include <audiovisual/utilities.h>
 #include <cinder/gl/gl.h>
 
 namespace audiovisual {
+// Ranges of the z-values of the mountains
 const int kHighPoint = 50;
 const int kLowPoint = -50;
+// The increment of the simplex noise it is fed
+const float kXIncrement = 0.03;
+const float kYIncrement = 0.05;
 
 void Terrain::DrawTerrain() {
   auto f_scale = (float)scale;
-  cinder::gl::pushModelMatrix();
-  //cinder::gl::polygonMode(GL_FRONT, GL_LINE);
   ci::gl::ScopedPolygonMode poly(GL_LINE);
   for (int y = 0; y < height - 1; y++) {
     cinder::gl::begin(GL_TRIANGLE_STRIP);
     for (int x = 0; x < width; x++) {
+      // Using triangle strips it scales it to opengl window
       cinder::gl::vertex((float)x * f_scale, (float)y * f_scale,
                          z_values.at(y).at(x));
       cinder::gl::vertex((float)x * f_scale, ((float)y + 1) * f_scale,
@@ -25,17 +29,12 @@ void Terrain::DrawTerrain() {
     }
     cinder::gl::end();
   }
-  cinder::gl::popModelMatrix();
 }
 
-// TODO: Move this method to another file with utilities
-// Sourced: https://stackoverflow.com/questions/3451553/value-remapping
-float Map(float value, float low1, float high1, float low2, float high2) {
-  return low2 + (high2 - low2) * ((value - low1) / (high1 - low1));
-}
-
-float past_center_spec = 0;
-void Terrain::UpdateZValues(float y_pos, float bass_vol, float center_spec) {
+float past_center_spec = 0;  // This is meant to average out the last spectroid
+std::vector<std::vector<float>> Terrain::UpdateZValues(float y_pos,
+                                                       float bass_vol,
+                                                       float center_spec) {
   float mapped_y_volume = 0;
   float mapped_x_volume = 0;
   if (can_shake) {
@@ -55,10 +54,11 @@ void Terrain::UpdateZValues(float y_pos, float bass_vol, float center_spec) {
           (Map(Simplex::noise(glm::vec3(noise_x, noise_y, mapped_x_volume)), 0,
                1, kLowPoint, kHighPoint));
       // Range of -50 to 50 for our max Z values, can be changed
-      noise_x += (float)0.03 + mapped_y_volume;
+      noise_x += kXIncrement + mapped_y_volume;
     }
-    noise_y += 0.05;
+    noise_y += kYIncrement;
   }
+  return z_values;
 }
 
 Terrain::Terrain(int height, int width, int scale, bool can_shake) {
@@ -68,16 +68,11 @@ Terrain::Terrain(int height, int width, int scale, bool can_shake) {
   this->can_shake = can_shake;
 
   // Allocate memory for our z_values and initialize
-  float y_off = 0;
   for (int y = 0; y < height; y++) {
-    float x_off = 0;
     z_values.emplace_back();
     for (int x = 0; x < width; x++) {
-      z_values.at(y).push_back(
-          Map(Simplex::noise(glm::vec2(x_off, y_off)), 0, 1, -50, 50));
-      x_off += .04;
+      z_values.at(y).push_back(0);
     }
-    y_off += 0.075;
   }
 }
 

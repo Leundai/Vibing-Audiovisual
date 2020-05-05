@@ -7,6 +7,7 @@ namespace audiovisual {
 class Star {
  public:
   Star(const glm::vec3& position, cinder::gl::BatchRef& batch_sphere_);
+  // This draws it using opengl taking in a scale of frequency
   void DrawStar(float magnitude);
 
  private:

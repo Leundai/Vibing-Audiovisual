@@ -28,7 +28,7 @@ class VibeApp : public cinder::app::App {
       bool forward);     // Handles switching between songs back or skip
   void MusicalColors();  // Maps the 3 frequency magnitudes to colors r g b
   void DrawGUI();        // Called to Draw the IMGUI
-  void SetUpSong();
+  void SetUpSong();      // Adds a song to the voice node but does not play it
 
  private:
   cinder::audio::MonitorSpectralNodeRef monitor_node_;
@@ -43,14 +43,14 @@ class VibeApp : public cinder::app::App {
   std::vector<float> freq_mag;
 
   float color_pick[4]{};
-  float noise_y = 0;
-  int cam_z_pos = 150;
-  int draw_interval = 17;
+  float noise_y;
+  float volume;
+  int cam_z_pos;
+  int draw_interval;
   int song_index;
+  int num_bins;
   bool is_paused{};
   bool is_cleared;
-  float volume;
-  int num_bins;
 };
 
 }  // namespace app

@@ -20,7 +20,6 @@ void SetUp(App::Settings* settings) {
   settings->setWindowSize(kWidth, kHeight);
   settings->setFrameRate(kFramerate);
   settings->setTitle("Synthwave vibe");
-  //settings->setFullScreen();
 }
 
 }  // namespace app

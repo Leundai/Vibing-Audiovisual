@@ -3,8 +3,6 @@ if (${CMAKE_VERSION} VERSION_LESS 3.11)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif ()
 
-cmake_policy(SET CMP0054 NEW)
-
 message("CMake Version: ${CMAKE_VERSION}.")
 
 # This is a magic line. Don't mess with this.
@@ -31,24 +29,30 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Let's nicely support folders in IDE's
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 # Allow code coverage.
-if("{CMAKE_C_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang"
-    OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
+if ("{CMAKE_C_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang"
+        OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
     message("Building with llvm Code Coverage Tools")
     set(CMAKE_CXX_FLAGS "-fprofile-instr-generate -fcoverage-mapping")
-elseif(CMAKE_COMPILER_IS_GNUCXX)
+elseif (CMAKE_COMPILER_IS_GNUCXX)
     message("Building with lcov Code Coverage Tools")
     set(CMAKE_CXX_FLAGS "--coverage")
-endif()
+endif ()
+
+if (MSVC)
+    # cmake_policy(SET CMP0015 NEW)
+endif ()
 
 # Docs only available if this is the main app
 find_package(Doxygen)
-if(Doxygen_FOUND)
+if (Doxygen_FOUND)
     add_subdirectory(docs)
-else()
+else ()
     # This is the message that some of you were seeing. It's not really an error or anything.
     message(STATUS "Doxygen not found, not building docs")
-endif()
+endif ()
 
 
 # FetchContent added in CMake 3.11, downloads during the configure step

@@ -1,22 +1,21 @@
-get_filename_component(CINDER_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../" ABSOLUTE)
-include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
+# Tests need to be added as executables first
+add_executable(test test.cc)
 
-file(GLOB SOURCE_LIST CONFIGURE_DEPENDS
-        "${FinalProject_SOURCE_DIR}/tests/*.h"
-        "${FinalProject_SOURCE_DIR}/tests/*.hpp"
-        "${FinalProject_SOURCE_DIR}/tests/*.cc"
-        "${FinalProject_SOURCE_DIR}/tests/*.cpp")
-
-
-ci_make_app(
-        APP_NAME    test
-        CINDER_PATH ${CINDER_PATH}
-        SOURCES     ${SOURCE_LIST}
-        LIBRARIES   mylibrary catch2
-        BLOCKS
-)
-
+# We're using C++14 in the test
 target_compile_features(test PRIVATE cxx_std_14)
+
+# Should be linked to the main library, as well as the Catch2 testing library
+target_link_libraries(test PRIVATE audiovisual catch2)
+
+# If you register a test, then ctest and make test will run it.
+# You can also run examples and check the output, as well.
+add_test(NAME test COMMAND test) # Command can be a target
+
+# Add folders
+set_target_properties(test PROPERTIES FOLDER cs126)
+
+set_property(TARGET test PROPERTY
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # Cross-platform compiler lints
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang"
@@ -33,7 +32,14 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang"
             -pedantic
             -pedantic-errors)
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-    cmake_policy(SET CMP0015 NEW)
     target_compile_options(test PRIVATE
             /W3)
 endif ()
+
+
+add_custom_command(
+        TARGET test
+        PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -DSRC_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data" -DDEST_DIR="${CMAKE_CURRENT_BINARY_DIR}/data" -P "${CMAKE_SOURCE_DIR}/cmake/configure_files.cmake"
+)
+

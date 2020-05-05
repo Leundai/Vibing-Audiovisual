@@ -6,13 +6,16 @@
 
 namespace audiovisual {
 
-float Map( float value, float low1, float high1, float low2, float high2);
-
 class Terrain {
  public:
   Terrain(int height, int width, int scale, bool can_shake);
+  // Drawing using Opengl
   void DrawTerrain();
-  void UpdateZValues(float y_pos, float bass_vol, float center_spec);
+  // Updating the 2-Dimensional Vector with z-values across terrain
+  // Takes in the bass volume and also the brightness in hertz
+  std::vector<std::vector<float>> UpdateZValues(float y_pos, float bass_vol,
+                                                float center_spec);
+  // Shaking of the terrain when bass is loud
   void ToggleCanShake();
 
  private:
@@ -25,5 +28,4 @@ class Terrain {
 
 }  // namespace audiovisual
 
-
-#endif // FINALPROJECT_MYLIBRARY_EXAMPLE_H_
+#endif  // FINALPROJECT_MYLIBRARY_EXAMPLE_H_
