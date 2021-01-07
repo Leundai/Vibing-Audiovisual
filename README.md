@@ -6,8 +6,6 @@
 Read [this document](https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html) to understand the project
 layout.
 
-**Author**: Leonardo Galindo - [`leogalindofrias@gmail.com`](mailto:leogalindofrias@gmail.com)
-
 ![](visual.gif)
 
 ## Dependencies
